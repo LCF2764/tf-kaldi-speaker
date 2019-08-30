@@ -148,9 +148,9 @@ def self_attention(features, aux_features, endpoints, params, is_training=None):
                                 initializer=tf.initializers.truncated_normal(stddev=0.1))
 
         if not params.att_split_key:
-            query_time_key = tf.einsum('bmld, hd->blh', key_features, query, name="query_time_key")
+            query_time_key = tf.einsum('ijkm,nm->ikn', key_features, query, name="query_time_key")
         else:
-            query_time_key = tf.einsum('bhld, hd->blh', key_features, query, name="query_time_key")
+            query_time_key = tf.einsum('ijkm, im->ikj', key_features, query, name="query_time_key")
 
         if params.att_use_scale:
             query_time_key = query_time_key * tf.rsqrt(tf.to_float(key_shape[-1]))
